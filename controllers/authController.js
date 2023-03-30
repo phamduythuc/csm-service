@@ -39,7 +39,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     if (!token) {
         return next(new AppError('You are not logged in! please login get access', 401));
     }
-    const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    const decode = await promisify(jsonwebtoken.verify)(token, process.env.JWT_SECRET);
     console.log(decode)
     const currentUser = await UserApp.findById(decode.id);
     if (!currentUser) {
