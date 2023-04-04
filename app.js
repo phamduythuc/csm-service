@@ -5,9 +5,12 @@ const morgan = require("morgan");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require('./routes/userRouter');
 const listCourseRouter = require('./routes/listCourseRouter');
-
+const cors = require('cors');
 
 const app = express();
+app.use(cors({
+  origin: ['http://localhost:4200', 'http://localhost:8080']
+}))
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
