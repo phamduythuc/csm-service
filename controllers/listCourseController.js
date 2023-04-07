@@ -12,17 +12,10 @@ exports.creatCourse = catchAsync( async (req, res, next) => {
 })
 
 exports.getAllCourse = catchAsync(async (req, res, next) => {
-    let  queryObj = {...req.query};
-    const excludedField = ['limit', 'page']
-    queryObj = queryObj.includes( item => delete queryObj[item])
-    console.log(queryObj)
-    const listCourse = await Course.find(queryObj);
+    const listCourse = await Course.find();
     res.status(200).json({
-        status: "success",
-        total: listCourse.length,
-        data: {
-            listCourse
-        },
+        status: 'success',
+        courses: listCourse
     })
 })
 

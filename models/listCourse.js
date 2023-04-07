@@ -3,8 +3,11 @@ const listCourse = new mongoose.Schema(
     {
         title: {
             type: String,
+            required: true,
+            minlength: 16
         },
         image: {
+            required: true,
             type: String,
         },
         author: {
@@ -17,11 +20,19 @@ const listCourse = new mongoose.Schema(
             type: Number,
         },
         rating: {
+            required: true,
             type: Number,
         },
         averageTotal: {
             type: Number,
         },
+        view: {
+            type: Number
+        },
+        time: {
+            type: Number
+        },
+
         tags: {
             type: String,
         }
