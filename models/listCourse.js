@@ -40,19 +40,14 @@ const listCourse = new mongoose.Schema(
 
         tags: {
             type: String,
+        },
+        background: {
+            type: String
+
         }
     }
 )
-listCourse.post('save', async function(doc) {
-    try {
-        console.log(doc)
-        const courseDetail = new detailCourse()
-        courseDetail._id = doc._id
-        await courseDetail.save();
-    }catch (err) {
 
-    }
-})
 const Course = mongoose.model('listCourse', listCourse)
 
 module.exports = Course;

@@ -9,5 +9,6 @@ router.post('/login', authController.login);
 router.post('/course', userController.createSourse);
 
 router.get('/', userController.getAllUser)
+router.get('/account', authController.getAccount)
 
 module.exports = router;

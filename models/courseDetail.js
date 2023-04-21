@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const {Schema} = require("mongoose");
 const {log} = require("nodemon/lib/utils");
-const courseDetail = new mongoose.Schema({
+const Course = require('../models/listCourse')
+const CourseDetail = new mongoose.Schema({
     courseId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     },
     will_learn: {
@@ -12,21 +13,27 @@ const courseDetail = new mongoose.Schema({
     track: {
         type: Array
     },
-    course: {
-        type: Array
-
+    course:
+        {
+           type:Schema.Types.Array,
+            ref: 'Course'
+        },
+    description: {
+        type: String
     }
 
 })
-// courseDetail.pre('save', async function(next) {
-//     const Course = require('./listCourse')
+// CourseDetail.pre('save', async function (next) {
+//     const Course = require('../models/listCourse')
 //
-//
-//     const courses = this.course.map(async id => Course.findById(id).populate('Course'))
+//     const courses = this.course.map(async id => {
+//         this.courseId = id
+//         return Course.findById(id)
+//     } )
 //     this.course = await Promise.all(courses);
-//
+//     console.log(await Promise.all(courses))
 //     next()
 // })
-const contentCourse = mongoose.model('courseDetail', courseDetail)
+const contentCourse = mongoose.model('courseDetail', CourseDetail)
 
 module.exports = contentCourse;

@@ -21,11 +21,11 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new AppError('email password not provided', 400));
     }
     const user = await UserApp.findOne({email}).select('+password');
-    console.log(user);
     if (!user || !await user.correctPassword(password, user.password)) {
         return next(new AppError("email of password incorrect", 401));
     }
     const token = tokenApp(user._id);
+
     res.status(200).json({
         status: 'success',
         token
@@ -40,7 +40,6 @@ exports.protect = catchAsync(async (req, res, next) => {
         return next(new AppError('You are not logged in! please login get access', 401));
     }
     const decode = await promisify(jsonwebtoken.verify)(token, process.env.JWT_SECRET);
-    console.log(decode)
     const currentUser = await UserApp.findById(decode.id);
     if (!currentUser) {
         return next(new AppError('the user belonging to this token does no longer exist', 401));
@@ -50,4 +49,18 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
     req.user = currentUser;
     next();
+})
+exports.getAccount = catchAsync(async (req, res, next) => {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+    const {id} = jsonwebtoken.verify(token, process.env.JWT_SECRET)
+    const user = await UserApp.findById(id).select('-password')
+    if (!user) {
+        return next(new AppError('Account does not exist', 400))
+    }
+    res.status(200).json(user)
+
+
 })

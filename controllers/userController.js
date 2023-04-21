@@ -1,6 +1,8 @@
 
 const catchAsync = require('../utils/catchAsync');
 const  UserApp = require('../models/userModelApp')
+const jsonwebtoken = require("jsonwebtoken");
+const AppError = require("../utils/appError");
 exports.getAllUser = catchAsync(async (req, res, next) => {
     const listUser = await UserApp.find();
     res.status(200).json({
@@ -9,6 +11,17 @@ exports.getAllUser = catchAsync(async (req, res, next) => {
             user: listUser
         }
     })
+})
+exports.getUser = catchAsync(async (req, res, next) => {
+    let tokenUser;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        tokenUser = req.headers.authorization.split(' ')[1];
+    }
+    const {id} = jsonwebtoken.verify(tokenUser, process.env.JWT_SECRET)
+    const user = await UserApp.findById(id).select('-password')
+    if (!user) {
+        return next(new AppError('Account does not exist', 400))
+    }
 })
 exports.createSourse = catchAsync(async (req, res, next) => {
     // const newSourse = await Course.create(req.body);
